@@ -4,6 +4,7 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { SplashScreenComponent } from './splash-screen/splash-screen.component';
 import { HomePage } from './home/home.page';
+import { EstadoPatioPage } from './estado-patio/estado-patio.page';
 
 
 export const routes: Routes = [
@@ -15,5 +16,9 @@ export const routes: Routes = [
   {
     path: 'home',
     loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
+  },
+  {
+    path: 'estado-patio',
+    loadComponent: () => import('./estado-patio/estado-patio.page').then( m => m.EstadoPatioPage)
   },
 ];

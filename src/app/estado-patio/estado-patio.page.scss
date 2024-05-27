@@ -1,0 +1,27 @@
+/* estado-patio.page.scss */
+
+/* Asegúrate de apuntar a las clases correctas que envuelven el contenido del tab button */
+.estado_tab,
+.inicio_tab,
+.conf_tab {
+  display: flex;
+  flex-direction: column; /* Cambia la dirección del contenido a columna para que la imagen esté encima del texto */
+  align-items: center; /* Centra el contenido horizontalmente */
+  justify-content: center; /* Centra el contenido verticalmente */
+  text-align: center; /* Asegúrate de que el texto esté centrado */
+}
+
+.estado_tab img,
+.inicio_tab img,
+.conf_tab img {
+  width: 24px; /* Ajusta el tamaño de la imagen según tus necesidades */
+  height: 24px; /* Ajusta el tamaño de la imagen según tus necesidades */
+  margin-bottom: 4px; /* Espacio entre la imagen y el texto */
+}
+
+.estado_tab,
+.inicio_tab,
+.conf_tab {
+  font-size: 12px; /* Ajusta el tamaño del texto según tus necesidades */
+  font-weight: 500; /* Ajusta el grosor del texto según tus necesidades */
+}

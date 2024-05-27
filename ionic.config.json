@@ -1,0 +1,7 @@
+{
+  "name": "Irritech",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

@@ -25,3 +25,31 @@
   font-size: 12px; /* Ajusta el tamaño del texto según tus necesidades */
   font-weight: 500; /* Ajusta el grosor del texto según tus necesidades */
 }
+
+.config-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.config-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+// .invisible-div {
+//   padding-right: 87px;
+// }
+
+// .edit-button {
+//   padding-right: 30px;
+// }
+
+// .edit-image {
+//   height: 24px;
+//   width: 24px;
+// }
+
+// .ionEdit-button {
+//   --border-radius: 20px;
+// }

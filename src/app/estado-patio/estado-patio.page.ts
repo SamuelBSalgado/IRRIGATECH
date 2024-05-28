@@ -11,12 +11,17 @@ import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/stan
   templateUrl: './estado-patio.page.html',
   styleUrls: ['./estado-patio.page.scss'],
   standalone: true,
-  imports: [IonicModule],
+  imports: [CommonModule, FormsModule, IonicModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class EstadoPatioPage {
+  selectedOption: string = '';
 
   constructor() { }
 
+  onRadioChange(event: any) {
+    this.selectedOption = event.detail.value;
+    console.log('Radio changed to', this.selectedOption);
+  }
 
 }

@@ -5,24 +5,29 @@
     </ion-buttons>
     <h1>Patio trasero</h1>
   </ion-toolbar>
-  <h6 id="estado-text">Seco</h6>
 </header>
+
+<ion-content>
+<h6 id="estado-text">Seco</h6>
+
+
 
 <ion-content class="ion-padding">
   <img src="../../assets/ionIcons/seco.png" alt="">
 </ion-content>
 
 
-<ion-tabs>
-  <ion-tab-bar slot="bottom">
-    <!-- TAB ESTADO -->
+  
+  <ion-tabs>
+    <ion-tab-bar slot="bottom">
+      <!-- TAB ESTADO -->
     <ion-tab-button tab="estado">
       <div class="estado_tab">
         <img src="../../assets/ionIcons/estado.png" alt="">
         Estado
       </div>
     </ion-tab-button>
-
+    
     <!-- TAB INICIO -->
     <ion-tab-button tab="inicio" (click)="go_home()">
       <div class="inicio_tab">
@@ -30,7 +35,7 @@
         Inicio
       </div>
     </ion-tab-button>
-
+    
     <!-- TAB CONFIGURACIÓN -->
     <ion-tab-button tab="config" id="open-conf_modal">
       <div class="conf_tab">
@@ -38,65 +43,66 @@
         Configuración
       </div>
     </ion-tab-button>
-
-    <ion-modal #modal trigger="open-conf_modal" [initialBreakpoint]="0.5" [breakpoints]="[0, 0.25, 0.5, 0.75]" [backdropBreakpoint]="0.5">
+    
+    <ion-modal class="sht-modal" #modal trigger="open-conf_modal" [initialBreakpoint]="0.5" [breakpoints]="[0, 0.25, 0.5, 0.75]" [backdropBreakpoint]="0.5">
       <ng-template>
-        <ion-content>
+        <ion-content class="contenido-conf">
           <div class="config-container">
-
+            
             <!-- Div invisible para alinear los elementos -->
             <!-- <div class="invisible-div"></div> -->
             
             <div class="config-text">
-              <h2 class="config-text">Configuración</h2>
+              <h2 class="configuration">Configuración</h2>
             </div>
-
+            
             <!-- <div class="edit-button">
               <ion-button class="ionEdit-button">
                 <img class="edit-image" src="../../assets/ionIcons/edit.png" alt="">
               </ion-button>
             </div> -->
-
+            
           </div>
           <br>
-
+          
           <!-- TOGGLE -->
           <!-- <ion-toggle [checked]="true">Riego automático</ion-toggle>
-          <br>
-          <br>
-          <ion-toggle>Riego manual</ion-toggle> -->
-          
-          
-          <!-- RADIO BUTTONS -->
-          <ion-radio-group [(ngModel)]="selectedOption" (ionChange)="onRadioChange($event)">
-            <ion-item>
-              <ion-label>Riego automático</ion-label>
-              <ion-radio slot="start" value="1"></ion-radio>
-            </ion-item>
             <br>
             <br>
-            <ion-item>
-              <ion-label>Riego temporizado</ion-label>
-              <ion-radio slot="start" value="2"></ion-radio>
-            </ion-item>
-          </ion-radio-group>
-
-          <div *ngIf="selectedOption === '2'">
-            <ion-item>
-              <ion-label position="floating">Hora de inicio</ion-label>
-              <ion-input type="number"></ion-input>
-            </ion-item>
-
-            <ion-item>
-              <ion-label position="floating">Hora de final</ion-label>
+            <ion-toggle>Riego manual</ion-toggle> -->
+            
+            
+            <!-- RADIO BUTTONS -->
+            <ion-radio-group [(ngModel)]="selectedOption" (ionChange)="onRadioChange($event)">
+              <ion-item class="per-itm">
+                <ion-label class="lab-conf">Riego automático</ion-label>
+                <ion-radio slot="start" value="1"></ion-radio>
+              </ion-item>
+              <br>
+              <br>
+              <ion-item>
+                <ion-label>Riego temporizado (24h)</ion-label>
+                <ion-radio slot="start" value="2"></ion-radio>
+              </ion-item>
+            </ion-radio-group>
+            
+            <div *ngIf="selectedOption === '2'">
+              <ion-item>
+                <ion-label position="floating">Hora de inicio</ion-label>
+                <ion-input type="number"></ion-input>
+              </ion-item>
+              
+              <ion-item>
+                <ion-label position="floating">Hora de final</ion-label>
               <ion-input type="number"></ion-input>
             </ion-item>
           </div>
-
+          
         </ion-content>
       </ng-template>
     </ion-modal>
-
+    
     
   </ion-tab-bar>
 </ion-tabs>
+</ion-content>

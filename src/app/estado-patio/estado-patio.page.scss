@@ -9,6 +9,7 @@
   align-items: center; /* Centra el contenido horizontalmente */
   justify-content: center; /* Centra el contenido verticalmente */
   text-align: center; /* Asegúrate de que el texto esté centrado */
+  color: #000000;
 }
 
 .estado_tab img,
@@ -36,12 +37,45 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  padding-left: 133px;
+  color: #000000;
+  font-weight: 900;
 }
 
 #estado-text {
   margin-top: 0px;
   margin-left: 51px;
   font-size: larger;
+  font-weight: 900;
+  color: #AF6017;
+  padding-top: 10px;
+  margin-bottom: 0px;
+}
+
+.contenido-conf {
+  --background: #FFFFFF;
+}
+
+ion-content {
+  --background: #F5F5F5
+}
+
+ion-tab-bar {
+  --background: #B9D9DF;
+}
+
+ion-radio-group {
+  --background: #FFFFFF;
+  color: #000000;
+}
+
+ion-item {
+  --background: #FFFFFF;
+  color: #000000;
+}
+
+ion-radio {
+  --color: #cc7a15;
 }
 // .invisible-div {
 //   padding-right: 87px;

@@ -1,6 +1,11 @@
 <header>
-  <h1>Patio trasero</h1>
-  <h6>Seco</h6>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <h1>Patio trasero</h1>
+  </ion-toolbar>
+  <h6 id="estado-text">Seco</h6>
 </header>
 
 <ion-content class="ion-padding">
@@ -19,7 +24,7 @@
     </ion-tab-button>
 
     <!-- TAB INICIO -->
-    <ion-tab-button tab="inicio">
+    <ion-tab-button tab="inicio" (click)="go_home()">
       <div class="inicio_tab">
         <img src="../../assets/ionIcons/home.png" alt="">
         Inicio

@@ -22,15 +22,15 @@ export class EstadoPatioPage {
   selectedOption: string = '';
 
   private client: MqttClient;
-  public message: string = 'Hola desde IONIC app';
+  public message: string = 'Prueba 29 de JULIO';
 
   constructor(private router: Router) {
     this.client = mqtt.connect('wss://broker.emqx.io:8084/mqtt', {
-      clientId: 'mqttx_ce977420'
+      clientId: 'mqttx_eb72f7b9'
     });
 
     this.client.on('connect', () => {
-      console.log('Conectado al broker con éxito!');
+      console.log('Conectado al broker en estado-patio!');
 
       this.client.subscribe('pruebaSerial', (err) => {
         if (!err) {

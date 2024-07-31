@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {IonicModule} from '@ionic/angular';
@@ -18,40 +18,77 @@ import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/stan
   imports: [CommonModule, FormsModule, IonicModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class EstadoPatioPage {
+export class EstadoPatioPage implements OnInit, OnDestroy{
   selectedOption: string = '';
 
-  private client: MqttClient;
+  private client: MqttClient | null = null;
   public message: string = 'Prueba 29 de JULIO';
 
   constructor(private router: Router) {
-    this.client = mqtt.connect('wss://broker.emqx.io:8084/mqtt', {
-      clientId: 'mqttx_eb72f7b9'
-    });
+    // this.client = mqtt.connect('wss://broker.emqx.io:8084/mqtt', {
+    //   clientId: 'mqttx_eb72f7b9'
+    // });
 
-    this.client.on('connect', () => {
-      console.log('Conectado al broker en estado-patio!');
+    // this.client.on('connect', () => {
+    //   console.log('Conectado al broker en estado-patio!');
 
-      this.client.subscribe('pruebaSerial', (err) => {
-        if (!err) {
-          console.log('Suscrito al tema pruebaSerial');
-        } else {
-          console.error('Error de suscripción: ', err);
-        }
+    //   this.client.subscribe('pruebaSerial', (err) => {
+    //     if (!err) {
+    //       console.log('Suscrito al tema pruebaSerial');
+    //     } else {
+    //       console.error('Error de suscripción: ', err);
+    //     }
+    //   });
+    // });
+
+    // this.client.on('message', (topic, message) => {
+    //   console.log(`Mensaje recibido del tema ${topic}: ${message.toString()}`);
+    // });
+
+    // this.client.on('error', (error) => {
+    //   console.error('Error de conexión', error);
+    // });
+
+    // this.client.on('close', () => {
+    //   console.log('conexión cerrada');
+    // });
+  }
+
+  ngOnInit() {
+    if (!this.client) {
+      this.client = mqtt.connect('wss://broker.emqx.io:8084/mqtt', {
+        clientId: 'mqttx_eb72f7b9'
       });
-    });
 
-    this.client.on('message', (topic, message) => {
-      console.log(`Mensaje recibido del tema ${topic}: ${message.toString()}`);
-    });
+      this.client.on('connect', () => {
+        console.log('Conectado al broker en estado-patio!');
+        this.client?.subscribe('pruebaSerial', (err) => {
+          if (!err) {
+            console.log('Suscrito al tema pruebaSerial');
+          } else {
+            console.error('Error de suscripción', err);
+          }
+        });
+      });
 
-    this.client.on('error', (error) => {
-      console.error('Error de conexión', error);
-    });
+      this.client.on('message', (topic, message) => {
+        console.log(`Mensaje recibido del tema ${topic}: ${message.toString()}`);
+      });
 
-    this.client.on('close', () => {
-      console.log('conexión cerrada');
-    });
+      this.client.on('error', (error) => {
+        console.error('Error de conexión', error);
+      });
+
+      this.client.on('close', () => {
+        console.log('Conexión cerrada en estado-patio');
+      });
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.client) {
+      this.client.end();
+    }
   }
 
   onRadioChange(event: any) {
@@ -65,12 +102,11 @@ export class EstadoPatioPage {
 
   sendMessage() {
     if (this.message.trim() !== '') {
-      this.client.publish('pruebaSerial', this.message);
+      this.client?.publish('pruebaSerial', this.message);
       console.log(`Mensaje enviado: ${this.message}`);
       // this.message = '';
     } else {
       console.error('El mensaje está vacío');
     }
   }
-
 }

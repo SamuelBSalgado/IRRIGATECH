@@ -1,5 +1,5 @@
 import { Component, ViewChild} from '@angular/core';
-import { OnInit } from '@angular/core';
+import { OnInit, OnDestroy } from '@angular/core';
 // import { IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/angular/standalone';
 import {IonicModule} from '@ionic/angular'
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -20,7 +20,7 @@ import mqtt, { MqttClient } from 'mqtt';
   imports: [IonicModule, CommonModule, FormsModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class HomePage implements OnInit {
+export class HomePage implements OnInit{
   @ViewChild(IonModal) modal!: IonModal;
 
   // id: string = "";
@@ -34,46 +34,122 @@ export class HomePage implements OnInit {
 
   devices: Array<{id: string, name: string}> = [];
 
-  private client: MqttClient;
+  private client: MqttClient | null = null;
   // private client = connect('wss://broker.emqx.io:8084/mqtt');
 
   constructor(private router: Router) {
     // const client = connect('wss://broker.emqx.io:8084/mqtt');
-    this.client = mqtt.connect('wss://broker.emqx.io:8084/mqtt', {
-      clientId: 'mqttx_eb72f7b9'
-    });
+    // this.client = mqtt.connect('wss://broker.emqx.io:8084/mqtt', {
+    //   clientId: 'mqttx_eb72f7b9'
+    // });
 
-    this.client.on('connect', () => {
-      console.log('Conectado al broker en home.page!');
+    // this.client.on('connect', () => {
+    //   console.log('Conectado al broker en home.page!');
 
-      this.client.subscribe('pruebaSerial', (err) => {
-        if (!err) {
-          console.log('Suscrito al tema pruebaSerial');
-        } else {
-          console.error('Error de suscripción: ', err);
-        }
-      });
-    });
+    //   this.client.subscribe('pruebaSerial', (err) => {
+    //     if (!err) {
+    //       console.log('Suscrito al tema pruebaSerial');
+    //     } else {
+    //       console.error('Error de suscripción: ', err);
+    //     }
+    //   });
+    // });
 
-    this.client.on('message', (topic, message) => {
-      if (topic === 'pruebaSerial' && message.toString() === 'ok') {
-        this.addDevice(this.values.id, this.values.name);
-        console.log(`Mensaje recibido del tema ${topic}: ${message.toString()}`);
-      }
-    });
+    // this.client.on('message', (topic, message) => {
+    //   if (topic === 'pruebaSerial' && message.toString() === 'ok') {
+    //     this.addDevice(this.values.id, this.values.name);
+    //     console.log(`Mensaje recibido del tema ${topic}: ${message.toString()}`);
+    //   }
+    // });
 
-    this.client.on('error', (error) => {
-      console.error('Error de conexión', error);
-    });
+    // this.client.on('error', (error) => {
+    //   console.error('Error de conexión', error);
+    // });
 
-    this.client.on('close', () => {
-      console.log('conexión cerrada');
-    });
+    // this.client.on('close', () => {
+    //   console.log('conexión cerrada');
+    // });
   }
 
   ngOnInit() {
+    // this.initializeClient(); //Creo que debo borrar esto para que no se llame 2 veces la conexión
     this.loadDevices();
+    // if (!this.client) {
+    //   this.client = mqtt.connect('wss://broker.emqx.io:8084/mqtt', {
+    //     clientId: 'mqttx_eb72f7b9'
+    //   });
+
+    //   this.client.on('connect', () => {
+    //     console.log('Conectado al broker en home.page!');
+    //     this.client?.subscribe('pruebaSerial', (err) => {
+    //       if (!err) {
+    //         console.log('Suscrito al tema pruebaSerial');
+    //       } else {
+    //         console.error('Error en la suscripción: ', err);
+    //       }
+    //     });
+    //   });
+
+    //   this.client.on('message', (topic, message) => {
+    //     if (topic === 'pruebaSerial' && message.toString() === 'ok') {
+    //       this.addDevice(this.values.id, this.values.name);
+    //       console.log(`Mensaje recibido del tema ${topic}: ${message.toString()}`);
+    //     }
+    //   });
+
+    //   this.client.on('error', (error) => {
+    //     console.log('Conexión cerrada en home.page');
+    //   });
+
+    //   this.client.on('close', () => {
+    //     console.log('Conexión CERRADA en home.page')
+    //   });
+    // }
   }
+
+  ionViewWillEnter() {
+    this.initializeClient();
+  }
+
+  initializeClient() {
+    if (!this.client || this.client.disconnected) {
+      this.client = mqtt.connect('wss://broker.emqx.io:8084/mqtt', {
+        clientId: 'mqttx_eb72f7b9'
+      });
+
+      this.client.on('connect', () => {
+        console.log('Conectado al broker en home.page!');
+        this.client?.subscribe('pruebaSerial', (err) => {
+          if (!err) {
+            console.log('Suscrito al tema pruebaSerial');
+          } else {
+            console.error('Error en la suscripción: ', err);
+          }
+        });
+      });
+    
+      this.client.on('message', (topic, message) => {
+        if (topic === 'pruebaSerial' && message.toString() === 'ok') {
+          this.addDevice(this.values.id, this.values.name);
+          console.log(`Mensaje recibido del tema ${topic}: ${message.toString()}`);
+        }
+      });
+    
+      this.client.on('error', (error) => {
+        console.log('Conexión cerrada en home.page');
+      });
+    
+      this.client.on('close', () => {
+        console.log('Conexión CERRADA en home.page')
+      });
+    }
+  }
+
+  // ngOnDestroy() {
+  //   if (this.client) {
+  //     this.client.end();
+  //   }
+  // }
 
   addDevice(id: string, name: string) {
     this.devices.push({ id, name });
@@ -92,6 +168,10 @@ export class HomePage implements OnInit {
   }
 
   navigateToEstadoPatio() {
+    if (this.client) {
+      this.client.end();
+      this.client = null;
+    }
     this.router.navigate(['/estado-patio']);
   }
 
@@ -109,7 +189,7 @@ export class HomePage implements OnInit {
 
   confirm() {
     if (this.values.id !== "" && this.values.name !== "") {
-      this.client.publish('pruebaSerial', JSON.stringify(this.values));
+      this.client?.publish('pruebaSerial', JSON.stringify(this.values));
       
       this.modal.dismiss(this.values, 'confirm');
       console.log(`Id: ${this.values.id}. Name: ${this.values.name}.`);

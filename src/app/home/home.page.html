@@ -26,6 +26,7 @@
       <ion-content class="ion-padding">
         <ion-item>
           <ion-input
+          id="idInput"
           label="Id del dispositivo"
           labelPlacement="stacked"
           type="text"
@@ -36,6 +37,7 @@
 
         <ion-item>
           <ion-input
+          id="nameInput"
           label="Nombre para el dispositivo"
           labelPlacement="stacked"
           type="text"
@@ -50,37 +52,21 @@
 
 <br>
 <br>
- <!-- AQUÍ ESTÁN LOS BOTONES QUE PUSE PARA PRESENTAR EL PROYECTO -->
+
 <ion-content class="custom-background ion-padding">
+  <!-- TÍTULO DEL CONTENT -->
   <h6 id="dispo-text">Dispositivos</h6>
+  
   <!-- AQUÍ SE DEBEN GENERAR LOS BOTONES -->
   <div class="button-grid">
-    <ion-button class="vertical-button" (click)="navigateToEstadoPatio()">
+    <ion-button *ngFor="let device of devices" class="vertical-button" (click)="navigateToEstadoPatio()">
       <div class="button-content">
         <img src="../../assets/ionIcons/hoja_icono.png" class="button-icon">
-        <span class="button-text">Patio trasero</span>
+        <span class="button-text">{{ device.name }}</span>
       </div>
     </ion-button>
-    <ion-button class="vertical-button" (click)="navigateToEstadoPatio()">
-      <div class="button-content">
-        <img src="../../assets/ionIcons/hoja_icono.png" class="button-icon">
-        <span class="button-text">Jardín delantero</span>
-      </div>
-    </ion-button>
-    <ion-button class="vertical-button" (click)="navigateToEstadoPatio()">
-      <div class="button-content">
-        <img src="../../assets/ionIcons/hoja_icono.png" class="button-icon">
-        <span class="button-text">vecina klient</span>
-      </div>
-    </ion-button>
-    <ion-button class="vertical-button" (click)="navigateToEstadoPatio()">
-      <div class="button-content">
-        <img src="../../assets/ionIcons/hoja_icono.png" class="button-icon">
-        <span class="button-text">Román Gallardo</span>
-      </div>
-    </ion-button>
-    
   </div>
+  <!-- Aquí acaba el espacio para generar botones -->
 </ion-content>
 
 

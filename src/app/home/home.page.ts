@@ -26,10 +26,13 @@ export class HomePage implements OnInit{
   // id: string = "";
   // name: string = "";
 
-  values = {
-    id: "",
-    name: ""
+  values: any = {
+    id: '',
+    name: ''
   }
+
+  idInput = document.getElementById('idInput') as HTMLInputElement;
+  idName = document.getElementById('nameInput') as HTMLInputElement;
 
 
   devices: Array<{id: string, name: string}> = [];
@@ -130,8 +133,10 @@ export class HomePage implements OnInit{
     
       this.client.on('message', (topic, message) => {
         if (topic === 'pruebaSerial' && message.toString() === 'ok') {
-          this.addDevice(this.values.id, this.values.name);
           console.log(`Mensaje recibido del tema ${topic}: ${message.toString()}`);
+          this.addDevice(this.values.id, this.values.name);
+          this.clearInputs();
+          this.modal.dismiss(this.values, 'confirm');
         }
       });
     
@@ -167,6 +172,11 @@ export class HomePage implements OnInit{
     }
   }
 
+  clearInputs() {
+    this.values.id = "";
+    this.values.name = "";
+  }
+
   navigateToEstadoPatio() {
     if (this.client) {
       this.client.end();
@@ -183,18 +193,13 @@ export class HomePage implements OnInit{
 
   cancel() {
     this.modal.dismiss(null, 'cancel');
-    this.values.id = "";
-    this.values.name = "";
+    this.clearInputs();
   }
 
   confirm() {
     if (this.values.id !== "" && this.values.name !== "") {
       this.client?.publish('pruebaSerial', JSON.stringify(this.values));
-      
-      this.modal.dismiss(this.values, 'confirm');
       console.log(`Id: ${this.values.id}. Name: ${this.values.name}.`);
-      this.values.id = "";
-      this.values.name = "";
     } else {
       console.error("Error: valores vacíos");
     }

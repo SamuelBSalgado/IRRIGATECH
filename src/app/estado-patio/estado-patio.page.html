@@ -3,24 +3,28 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/home"></ion-back-button>
     </ion-buttons>
-    <h1>Patio trasero</h1>
+    <h1>Estado de {{ device.name || 'dispositivo' }} </h1>
   </ion-toolbar>
 </header>
 
 <ion-content>
-<h6 id="estado-text">Seco</h6>
+  <!-- AQUÍ DEBE DECIR SI ESTÁ HÚMEDO O SECO. SE OBTIENE DE LA INFO DEL BOTÓN SELECCIONADO EN HOME.PAGE -->
+<h6 id="estado-text">{{ deviceStatus }}</h6>
 
 
-
+<!-- AQUÍ DEBE IR UNA IMAGEN DE ACUERDO AL ESTADO (SECO O HÚMEDO) -->
 <ion-content class="ion-padding">
-  <img src="../../assets/ionIcons/seco.png" alt="">
+  <img [src]="deviceStatus === 'Húmedo' ? '../../assets/ionIcons/humedo.png' : '../../assets/ionIcons/seco.png'" alt="">
 </ion-content>
 
 <ion-button (click)="sendMessage()" style="border: 2px solid red;">Mandar mensaje</ion-button>
   
   <ion-tabs>
     <ion-tab-bar slot="bottom">
-      <!-- TAB ESTADO -->
+      <!-- ESTE TAB DEBE CAMBIAR A DECIR 'HORARIO'.
+       Tal vez sea mejor que se llame 'TIPOS': (Implementar un mini menú que muestre varios perfiles de planta (tipos de planta)
+       con datos ya cargados: nivel de tolerancia mínima de sequedad, es decir, que cargue el dato de cuán húmeda debe estar
+       esa planta a la ESP32. Eso sería para el modo automático. Si se elige manual (por horario), entonces el tipo de planta no se toma en cuenta). -->
     <ion-tab-button tab="estado">
       <div class="estado_tab">
         <img src="../../assets/ionIcons/estado.png" alt="">

@@ -18,7 +18,7 @@ export const routes: Routes = [
     loadComponent: () => import('./home/home.page').then((m) => m.HomePage),
   },
   {
-    path: 'estado-patio',
+    path: 'estado-patio/:id',
     loadComponent: () => import('./estado-patio/estado-patio.page').then( m => m.EstadoPatioPage)
   },
   {

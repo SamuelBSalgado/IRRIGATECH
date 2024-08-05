@@ -59,7 +59,7 @@
   
   <!-- AQUÍ SE DEBEN GENERAR LOS BOTONES -->
   <div class="button-grid">
-    <ion-button *ngFor="let device of devices" class="vertical-button" (click)="navigateToEstadoPatio()">
+    <ion-button *ngFor="let device of devices" class="vertical-button" (click)="goToDevice(device.id)">
       <div class="button-content">
         <img src="../../assets/ionIcons/hoja_icono.png" class="button-icon">
         <span class="button-text">{{ device.name }}</span>

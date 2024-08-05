@@ -5,6 +5,8 @@ import {IonicModule} from '@ionic/angular';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { ActivatedRoute } from '@angular/router';
+
 // import * as mqtt from 'mqtt';
 import mqtt, { MqttClient } from 'mqtt';
 
@@ -19,12 +21,16 @@ import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/stan
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class EstadoPatioPage implements OnInit, OnDestroy{
+  deviceId: string | null = null;
+  device: { id:string; name: string; details?: string } = { id: '', name: '' };
+  deviceStatus: string = 'Desconocido';
+  
   selectedOption: string = '';
 
   private client: MqttClient | null = null;
   public message: string = 'Prueba 29 de JULIO';
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private route: ActivatedRoute) {
     // this.client = mqtt.connect('wss://broker.emqx.io:8084/mqtt', {
     //   clientId: 'mqttx_eb72f7b9'
     // });
@@ -55,6 +61,10 @@ export class EstadoPatioPage implements OnInit, OnDestroy{
   }
 
   ngOnInit() {
+    this.deviceId = this.route.snapshot.paramMap.get('id');
+    this.loadDeviceDetails();
+    this.loadDeviceStatus();
+
     if (!this.client) {
       this.client = mqtt.connect('wss://broker.emqx.io:8084/mqtt', {
         clientId: 'mqttx_eb72f7b9'
@@ -73,6 +83,7 @@ export class EstadoPatioPage implements OnInit, OnDestroy{
 
       this.client.on('message', (topic, message) => {
         console.log(`Mensaje recibido del tema ${topic}: ${message.toString()}`);
+        this.deviceStatus = message.toString() === 'ok' ? 'Húmedo' : 'Seco';
       });
 
       this.client.on('error', (error) => {
@@ -97,6 +108,7 @@ export class EstadoPatioPage implements OnInit, OnDestroy{
   }
 
   go_home() {
+    this.client?.end();
     this.router.navigate(['/home']);
   }
 
@@ -108,5 +120,14 @@ export class EstadoPatioPage implements OnInit, OnDestroy{
     } else {
       console.error('El mensaje está vacío');
     }
+  }
+
+  loadDeviceDetails() {
+    const devices = JSON.parse(localStorage.getItem('devices') || '[]');
+    this.device = devices.find((d: any) => d.id === this.deviceId) || {};
+  }
+
+  loadDeviceStatus() {
+    this.deviceStatus = 'Húmedo';
   }
 }

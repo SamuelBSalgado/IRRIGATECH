@@ -23,17 +23,13 @@ import mqtt, { MqttClient } from 'mqtt';
 export class HomePage implements OnInit{
   @ViewChild(IonModal) modal!: IonModal;
 
-  // id: string = "";
-  // name: string = "";
-
   values: any = {
     id: '',
     name: ''
   }
 
-  idInput = document.getElementById('idInput') as HTMLInputElement;
-  idName = document.getElementById('nameInput') as HTMLInputElement;
-
+  // idInput = document.getElementById('idInput') as HTMLInputElement;
+  // idName = document.getElementById('nameInput') as HTMLInputElement;
 
   devices: Array<{id: string, name: string}> = [];
 
@@ -177,12 +173,13 @@ export class HomePage implements OnInit{
     this.values.name = "";
   }
 
-  navigateToEstadoPatio() {
+
+  goToDevice(id: string) {
     if (this.client) {
       this.client.end();
       this.client = null;
     }
-    this.router.navigate(['/estado-patio']);
+    this.router.navigate(['/estado-patio', id]);
   }
 
   // onWillDismiss(event: Event) {

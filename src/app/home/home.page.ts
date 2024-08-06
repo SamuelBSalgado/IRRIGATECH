@@ -34,6 +34,8 @@ export class HomePage implements OnInit{
   devices: Array<{id: string, name: string}> = [];
 
   private client: MqttClient | null = null;
+
+  greeting: string = 'Buenos días';
   // private client = connect('wss://broker.emqx.io:8084/mqtt');
 
   constructor(private router: Router) {
@@ -128,11 +130,16 @@ export class HomePage implements OnInit{
       });
     
       this.client.on('message', (topic, message) => {
-        if (topic === 'pruebaSerial' && message.toString() === 'ok') {
-          console.log(`Mensaje recibido del tema ${topic}: ${message.toString()}`);
-          this.addDevice(this.values.id, this.values.name);
-          this.clearInputs();
-          this.modal.dismiss(this.values, 'confirm');
+        if (topic === 'pruebaSerial') {
+          const msg = message.toString();
+          if (msg === 'ok') {
+            console.log(`Mensaje recibido del tema ${topic}: ${msg}`);
+            this.addDevice(this.values.id, this.values.name);
+            this.clearInputs();
+            this.modal.dismiss(this.values, 'confirm');
+          } else {
+            this.updateGreeting(msg);
+          }
         }
       });
     
@@ -199,6 +206,18 @@ export class HomePage implements OnInit{
       console.log(`Id: ${this.values.id}. Name: ${this.values.name}.`);
     } else {
       console.error("Error: valores vacíos");
+    }
+  }
+
+  updateGreeting(timeString: string) {
+    const [hoursStr, minuteStr, secondStr] = timeString.split(':');
+    const hours = parseInt(hoursStr, 10);
+    if (hours >= 5 && hours < 12) {
+      this.greeting = 'Buenos días';
+    } else if (hours >= 12 && hours < 18) {
+      this.greeting = 'Buenas tardes';
+    } else {
+      this.greeting = 'Buenas noches';
     }
   }
 }

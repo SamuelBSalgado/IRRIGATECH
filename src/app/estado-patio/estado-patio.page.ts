@@ -63,7 +63,7 @@ export class EstadoPatioPage implements OnInit, OnDestroy{
   ngOnInit() {
     this.deviceId = this.route.snapshot.paramMap.get('id');
     this.loadDeviceDetails();
-    this.loadDeviceStatus();
+    // this.loadDeviceStatus();
 
     if (!this.client) {
       this.client = mqtt.connect('wss://broker.emqx.io:8084/mqtt', {
@@ -83,7 +83,9 @@ export class EstadoPatioPage implements OnInit, OnDestroy{
 
       this.client.on('message', (topic, message) => {
         console.log(`Mensaje recibido del tema ${topic}: ${message.toString()}`);
-        this.deviceStatus = message.toString() === 'ok' ? 'Húmedo' : 'Seco';
+        const humedad = JSON.parse(message.toString()).humedad;
+        this.deviceStatus = this.getHumidityStatus(humedad);
+        // this.handle_humidity(message.toString());
       });
 
       this.client.on('error', (error) => {
@@ -127,7 +129,17 @@ export class EstadoPatioPage implements OnInit, OnDestroy{
     this.device = devices.find((d: any) => d.id === this.deviceId) || {};
   }
 
-  loadDeviceStatus() {
-    this.deviceStatus = 'Húmedo';
+  // loadDeviceStatus() {
+  //   this.deviceStatus = 'Húmedo';
+  // }
+
+  getHumidityStatus(humedad: number): string {
+    if (humedad < 2400) {
+      console.log('SECO');
+      return 'Seco';
+    } else {
+      console.log('HÚMEDO')
+      return 'Húmedo';
+    }
   }
 }

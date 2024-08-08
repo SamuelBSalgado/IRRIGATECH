@@ -1,7 +1,7 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {IonicModule} from '@ionic/angular';
+import { IonicModule, IonModal } from '@ionic/angular';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -23,16 +23,38 @@ export class EstadoPatioPage implements OnInit, OnDestroy {
   deviceId: string | null = null;
   device: { id:string; name: string; details?: string } = { id: '', name: '' };
   deviceStatus: string = 'Desconocido';
-  
-  selectedOption: string = '';
 
+  @ViewChild('modal') modal: IonModal | undefined;
+  
   private client: MqttClient | null = null;
+  
+  selectedOption: string = '1'; //Riego automático por default
+  horaInicio: number | null = null;
+  horaFinal: number | null = null;
 
   constructor(private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.deviceId = this.route.snapshot.paramMap.get('id');
     this.loadDeviceDetails();
+
+    //Cargar selección de config
+    const storedOption = localStorage.getItem('selectedOption');
+    if (storedOption) {
+      this.selectedOption = storedOption;
+    }
+
+    //Cargar horarios guardados
+    this.horaInicio = parseInt(localStorage.getItem('horaInicio') || '0', 10);
+    this.horaFinal = parseInt(localStorage.getItem('horaFinal') || '0', 10);
+    // const storedHoraInicio = localStorage.getItem('horaInicio');
+    // const storedHoraFinal = localStorage.getItem('horaFinal');
+    // if (storedHoraInicio) {
+    //   this.horaInicio = parseInt(storedHoraInicio, 10);
+    // }
+    // if (storedHoraFinal) {
+    //   this.horaFinal = parseInt(storedHoraFinal, 10);
+    // }
 
     if (!this.client) {
       this.client = mqtt.connect('wss://broker.emqx.io:8084/mqtt', {
@@ -73,8 +95,48 @@ export class EstadoPatioPage implements OnInit, OnDestroy {
   }
 
   onRadioChange(event: any) {
-    this.selectedOption = event.detail.value;
+    // const horaInicio = localStorage.getItem('horaInicio');
+    // const horaFinal = localStorage.getItem('horaFinal');
+    const selectedValue = event.detail.value;
+    if (selectedValue === '2') {
+      if (this.horaInicio === null || this.horaFinal === null || this.horaInicio <= 0 || this.horaFinal <= 0) {
+        console.log('Riego temporizado no puede seleccionarse sin valores de hora.');
+        this.selectedOption = '1';
+        localStorage.setItem('selectedOption', this.selectedOption);
+        return;
+      }
+    }
+    this.selectedOption = selectedValue;
     console.log('Radio changed to', this.selectedOption);
+    //Guardarlo en local
+    localStorage.setItem('selectedOption', this.selectedOption);
+  }
+
+  saveHorarioValues() {
+    localStorage.setItem('horaInicio', this.horaInicio?.toString() || '0');
+    localStorage.setItem('horaFinal', this.horaFinal?.toString() || '0');
+
+    //validar que los valores de horario no sean 0 o inválidos
+    if (this.horaInicio === null || this.horaFinal === null || this.horaInicio <= 0 || this.horaFinal <= 0) {
+      this.selectedOption = '1';
+      localStorage.setItem('selectedOption', this.selectedOption);
+    } else {
+      localStorage.setItem('horaInicio', this.horaInicio.toString());
+      localStorage.setItem('horaFinal', this.horaFinal.toString());
+    }
+  }
+
+  closeModal() {
+    this.saveHorarioValues();
+
+    if(this.horaInicio === null || this.horaFinal === null || this.horaInicio <= 0 || this.horaFinal <= 0) {
+      this.selectedOption = '1';
+      localStorage.setItem('selectedOption', this.selectedOption);
+    }
+
+    if (this.modal) {
+      this.modal.dismiss();
+    }
   }
 
   go_home() {

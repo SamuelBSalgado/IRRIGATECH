@@ -23,12 +23,37 @@
        Tal vez sea mejor que se llame 'TIPOS': (Implementar un mini menú que muestre varios perfiles de planta (tipos de planta)
        con datos ya cargados: nivel de tolerancia mínima de sequedad, es decir, que cargue el dato de cuán húmeda debe estar
        esa planta a la ESP32. Eso sería para el modo automático. Si se elige manual (por horario), entonces el tipo de planta no se toma en cuenta). -->
-    <ion-tab-button tab="estado">
-      <div class="estado_tab">
+    <ion-tab-button tab="horario" id="open_horario_modal">
+      <div class="horario_tab">
         <img src="../../assets/ionIcons/estado.png" alt="">
-        Estado
+        Horario
       </div>
     </ion-tab-button>
+
+    <ion-modal class="sht-modal" #modal trigger="open_horario_modal" [initialBreakpoint]="0.5" [breakpoints]="[0, 0.25, 0.5, 0.75]" [backdropBreakpoint]="0.5" (ionModalWillDismiss)="closeModal()">
+      <ng-template>
+        <ion-content class="contenido_horario">
+          <div class="horario_container">
+            <div class="horario_title">
+              <h2 class="horario_text">Configuración del riego temporizado</h2>
+            </div>
+          </div>
+
+          <br>
+
+          <ion-item>
+            <ion-label position="floating">Hora de inicio</ion-label>
+            <ion-input type="number" [(ngModel)]="horaInicio"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="floating">Hora de finalización</ion-label>
+            <ion-input type="number" [(ngModel)]="horaFinal"></ion-input>
+          </ion-item>
+
+        </ion-content>
+      </ng-template>
+    </ion-modal>
     
     <!-- TAB INICIO -->
     <ion-tab-button tab="inicio" (click)="go_home()">
@@ -88,7 +113,7 @@
               </ion-item>
             </ion-radio-group>
             
-            <div *ngIf="selectedOption === '2'">
+            <!-- <div *ngIf="selectedOption === '2'">
               <ion-item>
                 <ion-label position="floating">Hora de inicio</ion-label>
                 <ion-input type="number"></ion-input>
@@ -98,7 +123,7 @@
                 <ion-label position="floating">Hora de final</ion-label>
               <ion-input type="number"></ion-input>
             </ion-item>
-          </div>
+          </div> -->
           
         </ion-content>
       </ng-template>

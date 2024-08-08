@@ -137,7 +137,8 @@ export class HomePage implements OnInit{
             this.addDevice(this.values.id, this.values.name);
             this.clearInputs();
             this.modal.dismiss(this.values, 'confirm');
-          } else {
+          }
+          if (msg !== 'ok') {
             this.updateGreeting(msg);
           }
         }
@@ -210,14 +211,16 @@ export class HomePage implements OnInit{
   }
 
   updateGreeting(timeString: string) {
-    const [hoursStr, minuteStr, secondStr] = timeString.split(':');
+    console.log(`hora del día recivida: ${timeString}.`);
+    const [hoursStr] = timeString.split(':');
     const hours = parseInt(hoursStr, 10);
     if (hours >= 5 && hours < 12) {
       this.greeting = 'Buenos días';
-    } else if (hours >= 12 && hours < 18) {
+    } else if (hours >= 12 && hours < 19) {
       this.greeting = 'Buenas tardes';
-    } else {
+    } else if (hours >= 19 && hours < 5) {
       this.greeting = 'Buenas noches';
     }
+    console.log(`Saludo setteado a: ${this.greeting}`);
   }
 }

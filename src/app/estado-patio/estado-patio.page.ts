@@ -7,7 +7,6 @@ import { Router } from '@angular/router';
 
 import { ActivatedRoute } from '@angular/router';
 
-// import * as mqtt from 'mqtt';
 import mqtt, { MqttClient } from 'mqtt';
 
 import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
@@ -20,7 +19,7 @@ import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/stan
   imports: [CommonModule, FormsModule, IonicModule],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class EstadoPatioPage implements OnInit, OnDestroy{
+export class EstadoPatioPage implements OnInit, OnDestroy {
   deviceId: string | null = null;
   device: { id:string; name: string; details?: string } = { id: '', name: '' };
   deviceStatus: string = 'Desconocido';
@@ -28,42 +27,12 @@ export class EstadoPatioPage implements OnInit, OnDestroy{
   selectedOption: string = '';
 
   private client: MqttClient | null = null;
-  public message: string = 'Prueba 29 de JULIO';
 
-  constructor(private router: Router, private route: ActivatedRoute) {
-    // this.client = mqtt.connect('wss://broker.emqx.io:8084/mqtt', {
-    //   clientId: 'mqttx_eb72f7b9'
-    // });
-
-    // this.client.on('connect', () => {
-    //   console.log('Conectado al broker en estado-patio!');
-
-    //   this.client.subscribe('pruebaSerial', (err) => {
-    //     if (!err) {
-    //       console.log('Suscrito al tema pruebaSerial');
-    //     } else {
-    //       console.error('Error de suscripción: ', err);
-    //     }
-    //   });
-    // });
-
-    // this.client.on('message', (topic, message) => {
-    //   console.log(`Mensaje recibido del tema ${topic}: ${message.toString()}`);
-    // });
-
-    // this.client.on('error', (error) => {
-    //   console.error('Error de conexión', error);
-    // });
-
-    // this.client.on('close', () => {
-    //   console.log('conexión cerrada');
-    // });
-  }
+  constructor(private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.deviceId = this.route.snapshot.paramMap.get('id');
     this.loadDeviceDetails();
-    // this.loadDeviceStatus();
 
     if (!this.client) {
       this.client = mqtt.connect('wss://broker.emqx.io:8084/mqtt', {
@@ -85,7 +54,6 @@ export class EstadoPatioPage implements OnInit, OnDestroy{
         console.log(`Mensaje recibido del tema ${topic}: ${message.toString()}`);
         const humedad = JSON.parse(message.toString()).humedad;
         this.deviceStatus = this.getHumidityStatus(humedad);
-        // this.handle_humidity(message.toString());
       });
 
       this.client.on('error', (error) => {
@@ -114,32 +82,18 @@ export class EstadoPatioPage implements OnInit, OnDestroy{
     this.router.navigate(['/home']);
   }
 
-  sendMessage() {
-    if (this.message.trim() !== '') {
-      this.client?.publish('pruebaSerial', this.message);
-      console.log(`Mensaje enviado: ${this.message}`);
-      // this.message = '';
-    } else {
-      console.error('El mensaje está vacío');
-    }
-  }
-
   loadDeviceDetails() {
     const devices = JSON.parse(localStorage.getItem('devices') || '[]');
     this.device = devices.find((d: any) => d.id === this.deviceId) || {};
   }
 
-  // loadDeviceStatus() {
-  //   this.deviceStatus = 'Húmedo';
-  // }
-
   getHumidityStatus(humedad: number): string {
     if (humedad < 2400) {
+      console.log('HÚMEDO');
+      return 'Húmedo';
+    } else {
       console.log('SECO');
       return 'Seco';
-    } else {
-      console.log('HÚMEDO')
-      return 'Húmedo';
     }
   }
 }

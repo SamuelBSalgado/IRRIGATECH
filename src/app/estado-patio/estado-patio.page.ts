@@ -28,7 +28,7 @@ export class EstadoPatioPage implements OnInit, OnDestroy {
   
   private client: MqttClient | null = null;
   
-  selectedOption: string = '1'; //Riego automático por default
+  selectedOption: string = '';
   horaInicio: number | null = null;
   horaFinal: number | null = null;
 
@@ -57,9 +57,7 @@ export class EstadoPatioPage implements OnInit, OnDestroy {
     // }
 
     if (!this.client) {
-      this.client = mqtt.connect('wss://broker.emqx.io:8084/mqtt', {
-        clientId: 'mqttx_eb72f7b9'
-      });
+      this.client = mqtt.connect('ws://35.206.111.160:8083/mqtt');
 
       this.client.on('connect', () => {
         console.log('Conectado al broker en estado-patio!');
@@ -103,13 +101,18 @@ export class EstadoPatioPage implements OnInit, OnDestroy {
         console.log('Riego temporizado no puede seleccionarse sin valores de hora.');
         this.selectedOption = '1';
         localStorage.setItem('selectedOption', this.selectedOption);
+        //PUBLICAR selectedOption A BROKER
+        console.log('Se publicará al broker (debe ser 1): ', this.selectedOption);
+        this.client?.publish('pruebaSerial', this.selectedOption);
         return;
       }
     }
     this.selectedOption = selectedValue;
     console.log('Radio changed to', this.selectedOption);
-    //Guardarlo en local
     localStorage.setItem('selectedOption', this.selectedOption);
+    //PUBLICAR selectedOption A BROKER
+    console.log('Se mandará al broker (debería ser el seleccionado): ', this.selectedOption);
+    this.client?.publish('pruebaSerial', this.selectedOption);
   }
 
   saveHorarioValues() {

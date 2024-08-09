@@ -1,7 +1,7 @@
 /* estado-patio.page.scss */
 
 /* Asegúrate de apuntar a las clases correctas que envuelven el contenido del tab button */
-.estado_tab,
+.horario_tab,
 .inicio_tab,
 .conf_tab {
   display: flex;
@@ -12,7 +12,7 @@
   color: #000000;
 }
 
-.estado_tab img,
+.horario_tab img,
 .inicio_tab img,
 .conf_tab img {
   width: 24px; /* Ajusta el tamaño de la imagen según tus necesidades */
@@ -20,7 +20,7 @@
   margin-bottom: 4px; /* Espacio entre la imagen y el texto */
 }
 
-.estado_tab,
+.horario_tab,
 .inicio_tab,
 .conf_tab {
   font-size: 12px; /* Ajusta el tamaño del texto según tus necesidades */

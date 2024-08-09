@@ -114,9 +114,7 @@ export class HomePage implements OnInit{
 
   initializeClient() {
     if (!this.client || this.client.disconnected) {
-      this.client = mqtt.connect('wss://broker.emqx.io:8084/mqtt', {
-        clientId: 'mqttx_eb72f7b9'
-      });
+      this.client = mqtt.connect('ws://35.206.111.160:8083/mqtt');
 
       this.client.on('connect', () => {
         console.log('Conectado al broker en home.page!');

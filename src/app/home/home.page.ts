@@ -121,6 +121,10 @@ export class HomePage implements OnInit{
 
   ionViewWillEnter() {
     this.initializeClient();
+    let saludo = localStorage.getItem('saludo');
+    if (saludo) {
+      this.greeting = saludo;
+    }
   }
 
   initializeClient() {
@@ -242,10 +246,13 @@ export class HomePage implements OnInit{
 
     if (hours >= 5 && hours < 12) {
       this.greeting = 'Buenos días';
+      localStorage.setItem('saludo', this.greeting);
     } else if (hours >= 12 && hours < 19) {
       this.greeting = 'Buenas tardes';
+      localStorage.setItem('saludo', this.greeting);
     } else {
       this.greeting = 'Buenas noches';
+      localStorage.setItem('saludo', this.greeting);
     }
     console.log(`Saludo setteado a: ${this.greeting}`);
   }

@@ -21,14 +21,14 @@ import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/stan
 })
 export class EstadoPatioPage implements OnInit, OnDestroy {
   deviceId: string | null = null;
-  device: { id:string; name: string; details?: string } = { id: '', name: '' };
+  device: { id: string; name: string; details?: string } = { id: '', name: '' };
   deviceStatus: string = 'Desconocido';
 
   @ViewChild('modal') modal: IonModal | undefined;
   
   private client: MqttClient | null = null;
   
-  selectedOption: string = '';
+  selectedOption: string = '1';
   horaInicio: number | null = null;
   horaFinal: number | null = null;
 
@@ -102,17 +102,29 @@ export class EstadoPatioPage implements OnInit, OnDestroy {
         this.selectedOption = '1';
         localStorage.setItem('selectedOption', this.selectedOption);
         //PUBLICAR selectedOption A BROKER
-        console.log('Se publicará al broker (debe ser 1): ', this.selectedOption);
-        this.client?.publish('pruebaSerial', this.selectedOption);
+        this.publishIrrigationConfig();
         return;
       }
     }
     this.selectedOption = selectedValue;
-    console.log('Radio changed to', this.selectedOption);
     localStorage.setItem('selectedOption', this.selectedOption);
     //PUBLICAR selectedOption A BROKER
-    console.log('Se mandará al broker (debería ser el seleccionado): ', this.selectedOption);
-    this.client?.publish('pruebaSerial', this.selectedOption);
+    this.publishIrrigationConfig();
+  }
+
+  publishIrrigationConfig() {
+    const config = {
+      id: '',
+      id_clone: this.device.id,
+      name: '',
+      irrigationMode: this.selectedOption,
+      horaInicio: this.horaInicio || null,
+      horaFinal: this.horaFinal || null
+    };
+
+    const jsonString = JSON.stringify(config);
+    console.log('Publicando configuración de riego al broker: ', jsonString);
+    this.client?.publish('pruebaSerial', jsonString);
   }
 
   saveHorarioValues() {

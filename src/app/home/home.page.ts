@@ -23,9 +23,20 @@ import mqtt, { MqttClient } from 'mqtt';
 export class HomePage implements OnInit{
   @ViewChild(IonModal) modal!: IonModal;
 
-  values: any = {
+  values: {
+    id: string,
+    id_clone: string,
+    name: string,
+    irrigationMode: string,
+    horaInicio: number,
+    horaFinal: number
+  } = {
     id: '',
-    name: ''
+    id_clone: '',
+    name: '',
+    irrigationMode: '',
+    horaInicio: 0,
+    horaFinal: 0
   }
 
   // idInput = document.getElementById('idInput') as HTMLInputElement;
@@ -131,7 +142,7 @@ export class HomePage implements OnInit{
         if (topic === 'pruebaSerial') {
           const msg = message.toString();
           if (msg === 'ok') {
-            console.log(`Mensaje recibido del tema ${topic}: ${msg}`);
+            console.log(`Botón CONCEDIDO para la ESP con id: ${this.values.id}`);
             this.addDevice(this.values.id, this.values.name);
             this.clearInputs();
             this.modal.dismiss(this.values, 'confirm');

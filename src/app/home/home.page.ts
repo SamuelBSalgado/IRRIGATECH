@@ -46,7 +46,7 @@ export class HomePage implements OnInit{
 
   private client: MqttClient | null = null;
 
-  greeting: string = 'Buenos días';
+  greeting: string = '';
   // private client = connect('wss://broker.emqx.io:8084/mqtt');
 
   constructor(private router: Router) {
@@ -147,8 +147,19 @@ export class HomePage implements OnInit{
             this.clearInputs();
             this.modal.dismiss(this.values, 'confirm');
           }
-          if (msg !== 'ok') {
-            this.updateGreeting(msg);
+           else if (msg === 'id_incorrecto') {
+            console.log(`ID: ${this.values.id} NO COINCIDE: ${msg}.`);
+          } else {
+            try {
+              const payload = JSON.parse(message.toString());
+              if (payload.hora) {
+                this.updateGreeting(payload.hora);
+                console.log(`HORA: ${payload.hora}`);
+              }
+            } catch (error) {
+              console.error(`Error al analizar el mensaje MQTT: ${error}`);
+            }
+            console.log(msg);
           }
         }
       });
@@ -220,14 +231,20 @@ export class HomePage implements OnInit{
   }
 
   updateGreeting(timeString: string) {
-    console.log(`hora del día recivida: ${timeString}.`);
+    console.log(`hora del día recibida: ${timeString}.`);
     const [hoursStr] = timeString.split(':');
     const hours = parseInt(hoursStr, 10);
+
+    if (isNaN(hours)) {
+      console.error(`Error al analizar la hora: ${timeString}`);
+      return;
+    }
+
     if (hours >= 5 && hours < 12) {
       this.greeting = 'Buenos días';
     } else if (hours >= 12 && hours < 19) {
       this.greeting = 'Buenas tardes';
-    } else if (hours >= 19 && hours < 5) {
+    } else {
       this.greeting = 'Buenas noches';
     }
     console.log(`Saludo setteado a: ${this.greeting}`);

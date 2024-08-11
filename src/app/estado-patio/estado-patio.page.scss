@@ -43,11 +43,22 @@
 }
 
 #estado-text {
+  &.estado-obteniendo {
+    color: #000000;
+  }
+
+  &.estado-seco {
+    color: #AF6017;
+  }
+
+  &.estado-humedo {
+    color: #277dda;
+  }
+
   margin-top: 0px;
   margin-left: 51px;
   font-size: larger;
   font-weight: 900;
-  color: #AF6017;
   padding-top: 10px;
   margin-bottom: 0px;
 }

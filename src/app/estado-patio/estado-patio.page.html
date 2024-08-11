@@ -9,7 +9,7 @@
 
 <ion-content>
   <!-- AQUÍ DEBE DECIR SI ESTÁ HÚMEDO O SECO. SE OBTIENE DE LA INFO DEL BOTÓN SELECCIONADO EN HOME.PAGE -->
-<h6 id="estado-text">{{ deviceStatus }}</h6>
+<h6 id="estado-text" [ngClass]="{'estado-obteniendo': deviceStatus === 'Obteniendo estado...', 'estado-seco': deviceStatus === 'Seco', 'estado-humedo': deviceStatus === 'Húmedo'}">{{ deviceStatus }}</h6>
 
 
 <!-- AQUÍ DEBE IR UNA IMAGEN DE ACUERDO AL ESTADO (SECO O HÚMEDO) -->

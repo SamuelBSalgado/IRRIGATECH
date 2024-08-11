@@ -22,7 +22,7 @@ import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/stan
 export class EstadoPatioPage implements OnInit, OnDestroy {
   deviceId: string | null = null;
   device: { id: string; name: string; details?: string } = { id: '', name: '' };
-  deviceStatus: string = 'Desconocido';
+  deviceStatus: string = 'Obteniendo estado...';
 
   @ViewChild('modal') modal: IonModal | undefined;
   

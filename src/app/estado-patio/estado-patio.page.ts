@@ -72,8 +72,16 @@ export class EstadoPatioPage implements OnInit, OnDestroy {
 
       this.client.on('message', (topic, message) => {
         console.log(`Mensaje recibido del tema ${topic}: ${message.toString()}`);
-        const humedad = JSON.parse(message.toString()).humedad;
-        this.deviceStatus = this.getHumidityStatus(humedad);
+        const msg = message.toString();
+
+        if (msg === 'riegoAUTO') {
+          console.log(`El riego en la ESP32 ahora es: ${msg}.`);
+        } else if (msg === 'riegoTEMP') {
+          console.log(`El riego en la ESP32 ahora es: ${msg}.`);
+        } else {
+          const humedad = JSON.parse(msg).humedad;
+          this.deviceStatus = this.getHumidityStatus(humedad);
+        }
       });
 
       this.client.on('error', (error) => {

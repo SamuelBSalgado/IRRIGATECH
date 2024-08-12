@@ -150,9 +150,12 @@ export class HomePage implements OnInit{
             this.addDevice(this.values.id, this.values.name);
             this.clearInputs();
             this.modal.dismiss(this.values, 'confirm');
-          }
-           else if (msg === 'id_incorrecto') {
+          } else if (msg === 'id_incorrecto') {
             console.log(`ID: ${this.values.id} NO COINCIDE: ${msg}.`);
+          } else if ( msg === 'riegoAUTO') {
+            console.log(`El riego en la ESP32 ahora es: ${msg}.`);
+          } else if (msg === 'riegoTEMP'){
+            console.log(`El riego ahora es: ${msg}.`);
           } else {
             try {
               const payload = JSON.parse(message.toString());

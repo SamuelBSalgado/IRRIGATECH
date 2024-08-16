@@ -88,6 +88,24 @@ ion-item {
 ion-radio {
   --color: #cc7a15;
 }
+
+.horario_text {
+  color: #000000;
+}
+
+.horario_text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.contenido_horario {
+  --background: #FFFFFF;
+}
+
+.sht-modal {
+  --border-radius: 20px;
+}
 // .invisible-div {
 //   padding-right: 87px;
 // }

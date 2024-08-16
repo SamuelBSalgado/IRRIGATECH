@@ -9,6 +9,8 @@ import { OverlayEventDetail } from '@ionic/core/components';
 import { IonModal } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 
+import { ToastController } from '@ionic/angular';
+
 import mqtt, { MqttClient } from 'mqtt';
 // import { connect } from 'mqtt';
 
@@ -49,7 +51,7 @@ export class HomePage implements OnInit{
   greeting: string = '';
   // private client = connect('wss://broker.emqx.io:8084/mqtt');
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private toastController: ToastController) {
     // const client = connect('wss://broker.emqx.io:8084/mqtt');
     // this.client = mqtt.connect('wss://broker.emqx.io:8084/mqtt', {
     //   clientId: 'mqttx_eb72f7b9'
@@ -234,7 +236,19 @@ export class HomePage implements OnInit{
       console.log(`Id: ${this.values.id}. Name: ${this.values.name}.`);
     } else {
       console.error("Error: valores vacíos");
+      //Hacer que aparezca el Toast de error: valores vacíos
+      this.showToast('Error: Debes llenar los valores');
     }
+  }
+
+  async showToast(message: string) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 2500,
+      position: 'bottom',
+      color: 'danger'
+    });
+    toast.present();
   }
 
   updateGreeting(timeString: string) {
